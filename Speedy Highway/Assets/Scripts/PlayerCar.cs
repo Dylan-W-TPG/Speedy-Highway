@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerCar : MonoBehaviour
 {
+    [SerializeField] private float mainSpeed = 25f;
     [SerializeField] private float steerSpeed = 1f;
     [SerializeField] private int roadLanes = 5;
 
@@ -48,6 +49,7 @@ public class PlayerCar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        transform.parent.position += Vector3.forward * mainSpeed * Time.deltaTime;
         xPos = (laneNo - 2) * laneWidth;
         transform.position = new Vector3(xPos, transform.position.y, transform.position.z);
     }
