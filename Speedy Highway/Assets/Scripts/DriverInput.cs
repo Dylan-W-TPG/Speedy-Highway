@@ -28,70 +28,68 @@ public partial class @DriverInput: IInputActionCollection2, IDisposable
             ""id"": ""50a7e5f1-e623-4a25-84cb-a9eff4977c25"",
             ""actions"": [
                 {
-                    ""name"": ""Steering"",
-                    ""type"": ""Value"",
+                    ""name"": ""SteerLeft"",
+                    ""type"": ""Button"",
                     ""id"": ""d0c6accd-64ad-420c-80a6-966cc0baaefb"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SteerRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""9670deba-1d47-4e54-8668-53802091a842"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
-                    ""name"": ""Keyboard"",
-                    ""id"": ""2565148b-31c6-4550-a3a9-9257ff1388ce"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Steering"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""1c56d326-0bc5-486c-ba9c-40fc2e4282d3"",
+                    ""name"": """",
+                    ""id"": ""c0f1dea0-bd1e-4bd6-898f-27bf8aca1680"",
                     ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Steering"",
+                    ""action"": ""SteerLeft"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""left"",
-                    ""id"": ""816b4f85-ed07-40d9-93b8-fe169acc1dec"",
+                    ""name"": """",
+                    ""id"": ""f4ec4b62-8b7e-44e9-a748-e812cd5f1213"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Steering"",
+                    ""action"": ""SteerLeft"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""right"",
-                    ""id"": ""5b48f1f5-d335-4ebc-82b8-d6c976c9ad4c"",
+                    ""name"": """",
+                    ""id"": ""4c046d22-18d3-410f-98e6-910af0718898"",
                     ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Steering"",
+                    ""action"": ""SteerRight"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""right"",
-                    ""id"": ""06f4324b-dd68-4a75-895d-3447b59b00e3"",
+                    ""name"": """",
+                    ""id"": ""874f99ee-727f-4616-8cad-6df9b662f89a"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Steering"",
+                    ""action"": ""SteerRight"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -100,7 +98,8 @@ public partial class @DriverInput: IInputActionCollection2, IDisposable
 }");
         // Driving
         m_Driving = asset.FindActionMap("Driving", throwIfNotFound: true);
-        m_Driving_Steering = m_Driving.FindAction("Steering", throwIfNotFound: true);
+        m_Driving_SteerLeft = m_Driving.FindAction("SteerLeft", throwIfNotFound: true);
+        m_Driving_SteerRight = m_Driving.FindAction("SteerRight", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -162,12 +161,14 @@ public partial class @DriverInput: IInputActionCollection2, IDisposable
     // Driving
     private readonly InputActionMap m_Driving;
     private List<IDrivingActions> m_DrivingActionsCallbackInterfaces = new List<IDrivingActions>();
-    private readonly InputAction m_Driving_Steering;
+    private readonly InputAction m_Driving_SteerLeft;
+    private readonly InputAction m_Driving_SteerRight;
     public struct DrivingActions
     {
         private @DriverInput m_Wrapper;
         public DrivingActions(@DriverInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Steering => m_Wrapper.m_Driving_Steering;
+        public InputAction @SteerLeft => m_Wrapper.m_Driving_SteerLeft;
+        public InputAction @SteerRight => m_Wrapper.m_Driving_SteerRight;
         public InputActionMap Get() { return m_Wrapper.m_Driving; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -177,16 +178,22 @@ public partial class @DriverInput: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_DrivingActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_DrivingActionsCallbackInterfaces.Add(instance);
-            @Steering.started += instance.OnSteering;
-            @Steering.performed += instance.OnSteering;
-            @Steering.canceled += instance.OnSteering;
+            @SteerLeft.started += instance.OnSteerLeft;
+            @SteerLeft.performed += instance.OnSteerLeft;
+            @SteerLeft.canceled += instance.OnSteerLeft;
+            @SteerRight.started += instance.OnSteerRight;
+            @SteerRight.performed += instance.OnSteerRight;
+            @SteerRight.canceled += instance.OnSteerRight;
         }
 
         private void UnregisterCallbacks(IDrivingActions instance)
         {
-            @Steering.started -= instance.OnSteering;
-            @Steering.performed -= instance.OnSteering;
-            @Steering.canceled -= instance.OnSteering;
+            @SteerLeft.started -= instance.OnSteerLeft;
+            @SteerLeft.performed -= instance.OnSteerLeft;
+            @SteerLeft.canceled -= instance.OnSteerLeft;
+            @SteerRight.started -= instance.OnSteerRight;
+            @SteerRight.performed -= instance.OnSteerRight;
+            @SteerRight.canceled -= instance.OnSteerRight;
         }
 
         public void RemoveCallbacks(IDrivingActions instance)
@@ -206,6 +213,7 @@ public partial class @DriverInput: IInputActionCollection2, IDisposable
     public DrivingActions @Driving => new DrivingActions(this);
     public interface IDrivingActions
     {
-        void OnSteering(InputAction.CallbackContext context);
+        void OnSteerLeft(InputAction.CallbackContext context);
+        void OnSteerRight(InputAction.CallbackContext context);
     }
 }

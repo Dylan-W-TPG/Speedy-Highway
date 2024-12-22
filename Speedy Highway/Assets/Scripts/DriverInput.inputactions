@@ -6,70 +6,68 @@
             "id": "50a7e5f1-e623-4a25-84cb-a9eff4977c25",
             "actions": [
                 {
-                    "name": "Steering",
-                    "type": "Value",
+                    "name": "SteerLeft",
+                    "type": "Button",
                     "id": "d0c6accd-64ad-420c-80a6-966cc0baaefb",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SteerRight",
+                    "type": "Button",
+                    "id": "9670deba-1d47-4e54-8668-53802091a842",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
                 {
-                    "name": "Keyboard",
-                    "id": "2565148b-31c6-4550-a3a9-9257ff1388ce",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Steering",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "left",
-                    "id": "1c56d326-0bc5-486c-ba9c-40fc2e4282d3",
+                    "name": "",
+                    "id": "c0f1dea0-bd1e-4bd6-898f-27bf8aca1680",
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Steering",
+                    "action": "SteerLeft",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "left",
-                    "id": "816b4f85-ed07-40d9-93b8-fe169acc1dec",
+                    "name": "",
+                    "id": "f4ec4b62-8b7e-44e9-a748-e812cd5f1213",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Steering",
+                    "action": "SteerLeft",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "right",
-                    "id": "5b48f1f5-d335-4ebc-82b8-d6c976c9ad4c",
+                    "name": "",
+                    "id": "4c046d22-18d3-410f-98e6-910af0718898",
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Steering",
+                    "action": "SteerRight",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "right",
-                    "id": "06f4324b-dd68-4a75-895d-3447b59b00e3",
+                    "name": "",
+                    "id": "874f99ee-727f-4616-8cad-6df9b662f89a",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Steering",
+                    "action": "SteerRight",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 }
             ]
         }
