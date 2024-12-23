@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerCar : MonoBehaviour
 {
     [SerializeField] private float mainSpeed = 25f;
-    [SerializeField] private float steerSpeed = 1f;
+    [SerializeField] private float acceleration = 0.1f;
     [SerializeField] private int roadLanes = 5;
 
     private DriverInput actions;
@@ -52,6 +52,7 @@ public class PlayerCar : MonoBehaviour
         transform.parent.position += Vector3.forward * mainSpeed * Time.deltaTime;
         xPos = (laneNo - 2) * laneWidth;
         transform.position = new Vector3(xPos, transform.position.y, transform.position.z);
+        mainSpeed += acceleration * Time.deltaTime;
     }
 
     void SteeringLeft(InputAction.CallbackContext context)
@@ -62,5 +63,10 @@ public class PlayerCar : MonoBehaviour
     void SteeringRight(InputAction.CallbackContext context)
     {
         if (laneNo < roadLanes - 1) laneNo++;
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.layer == 7) Destroy(this.gameObject);
     }
 }
