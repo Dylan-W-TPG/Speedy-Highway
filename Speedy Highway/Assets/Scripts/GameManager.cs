@@ -7,7 +7,19 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    [SerializeField] private float obstacleSpawnIntervalTime = 1f;
+    public float ObstacleSpawnIntervalTime
+    {
+        get
+        {
+            return obstacleSpawnIntervalTime;
+        }
+    }
+    private float initSpawnIntervalTime;
+    [SerializeField] private float obstacleSpawnTimeReductionRate = 1f;
+
     private PlayerCar car;
+    private float initSpeed;
 
     private float distance;
     public float Distance
@@ -15,6 +27,16 @@ public class GameManager : MonoBehaviour
         get
         {
             return distance;
+        }
+    }
+
+    [SerializeField] private float crashUIDelayTime = 3f;
+    private bool hasCrashed;
+    public bool HasCrashed
+    {
+        get
+        {
+            return hasCrashed;
         }
     }
 
@@ -48,6 +70,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        initSpawnIntervalTime = obstacleSpawnIntervalTime;
+        
         Initiate();
         
         if (limitFPS)
@@ -60,13 +84,29 @@ public class GameManager : MonoBehaviour
     private void Initiate()
     {
         car = GameObject.Find("PlayerCar").GetComponent<PlayerCar>();
+        initSpeed = car.MainSpeed;
+        obstacleSpawnIntervalTime = initSpawnIntervalTime;
+        hasCrashed = false;
     }
 
     void Update()
     {
-        if (car != null)
+        if (car != null && !hasCrashed)
         {
             distance = Mathf.Round(car.transform.position.z);
+            obstacleSpawnIntervalTime = initSpawnIntervalTime * (initSpeed / car.MainSpeed) / obstacleSpawnTimeReductionRate;
         }
+    }
+
+    public void CarCrash()
+    {
+        hasCrashed = true;
+        StartCoroutine(GameOver());
+    }
+
+    IEnumerator GameOver()
+    {
+        yield return new WaitForSecondsRealtime(crashUIDelayTime);
+        Debug.Log("Game Over.");
     }
 }

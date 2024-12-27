@@ -11,6 +11,7 @@ public class EndlessLevelHandler : MonoBehaviour
     private GameObject[] sectionPool;
 
     private float sectionLength;
+
     public float sectionNo;
     
     // Start is called before the first frame update
@@ -33,14 +34,17 @@ public class EndlessLevelHandler : MonoBehaviour
 
     void Update()
     {
-        carZPos = car.transform.position.z;
-        if (carZPos >= sectionNo * sectionLength)
+        if (!GameManager.instance.HasCrashed)
         {
-            sectionPool[0].transform.position = new Vector3(0f, 0f, ++sectionNo * sectionLength);
+            carZPos = car.transform.position.z;
+            if (carZPos >= sectionNo * sectionLength)
+            {
+                sectionPool[0].transform.position = new Vector3(0f, 0f, ++sectionNo * sectionLength);
 
-            GameObject temp = sectionPool[0];
-            sectionPool[0] = sectionPool[1];
-            sectionPool[1] = temp;
+                GameObject temp = sectionPool[0];
+                sectionPool[0] = sectionPool[1];
+                sectionPool[1] = temp;
+            }
         }
     }
 }

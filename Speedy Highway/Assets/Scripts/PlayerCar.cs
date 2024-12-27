@@ -6,8 +6,30 @@ using UnityEngine.InputSystem;
 public class PlayerCar : MonoBehaviour
 {
     [SerializeField] private float mainSpeed = 25f;
+    public float MainSpeed
+    {
+        get
+        {
+            return mainSpeed;
+        }
+    }
     [SerializeField] private float acceleration = 0.1f;
     [SerializeField] private int roadLanes = 5;
+    public int RoadLanes
+    {
+        get
+        {
+            return roadLanes;
+        }
+    }
+
+    [SerializeField] private GameObject brokenVersion;
+    [SerializeField] private float explosionForce = 100f;
+    [SerializeField] private float explosionRadius = 10f;
+    [SerializeField] private float upwardModifier = 5f;
+    [SerializeField] private float forwardModifier = 0.5f;
+
+    private Rigidbody rB;
 
     private DriverInput actions;
     private InputAction steerLeft;
@@ -17,6 +39,13 @@ public class PlayerCar : MonoBehaviour
     
     private float xPos;
     private float laneWidth;
+    public float LaneWidth
+    {
+        get
+        {
+            return laneWidth;
+        }
+    }
 
     void Awake()
     {
@@ -44,6 +73,7 @@ public class PlayerCar : MonoBehaviour
     {
         laneNo = roadLanes / 2;
         laneWidth = GameObject.Find("Road").transform.lossyScale.x / (float) roadLanes;
+        rB = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -67,6 +97,17 @@ public class PlayerCar : MonoBehaviour
 
     void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject.layer == 7) Destroy(this.gameObject);
+        if (col.gameObject.layer == 7)
+        {
+            GameManager.instance.CarCrash();
+            
+            GameObject brokenCar = Instantiate(brokenVersion, this.transform.position, this.transform.rotation);
+            foreach (Transform carPart in brokenCar.transform)
+            {
+                carPart.GetComponent<Rigidbody>().AddExplosionForce(explosionForce, rB.position - (Vector3.forward * forwardModifier), explosionRadius, upwardModifier, ForceMode.Impulse);
+            }
+
+            Destroy(this.gameObject, 0.01f);
+        }
     }
 }
