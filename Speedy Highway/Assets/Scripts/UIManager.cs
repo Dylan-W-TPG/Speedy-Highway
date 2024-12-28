@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class UIManager : MonoBehaviour
     private TextMeshProUGUI debugFPSText;
     private int avgFPS;
     private WaitForSecondsRealtime countDelay = new WaitForSecondsRealtime(0.25f);
+
+    private RectTransform gameOverScreen;
 
     // Awake is called when the script instance is being loaded
     void Awake()
@@ -33,6 +36,8 @@ public class UIManager : MonoBehaviour
     {
         scoreText = GameObject.Find("Canvas/Distance").GetComponent<TextMeshProUGUI>();
         debugFPSText = GameObject.Find("Canvas/DebugFPS").GetComponent<TextMeshProUGUI>();
+        gameOverScreen = GameObject.Find("Canvas/GameOver").GetComponent<RectTransform>();
+        gameOverScreen.gameObject.SetActive(false);
     }
 
     void Update()
@@ -52,5 +57,21 @@ public class UIManager : MonoBehaviour
             debugFPSText.text = "FPS: " + avgFPS;
         }
         else debugFPSText.gameObject.SetActive(false);
+    }
+
+    public void GameOver()
+    {
+        gameOverScreen.Find("Panel/DistanceValue").GetComponent<TextMeshProUGUI>().text = GameManager.instance.Distance + " m";
+        gameOverScreen.gameObject.SetActive(true);
+    }
+
+    public void SceneRestart()
+    {
+        GameManager.instance.SceneLoad(SceneManager.GetActiveScene().name);
+    }
+
+    public void SceneLoad(String name)
+    {
+        GameManager.instance.SceneLoad(name);
     }
 }

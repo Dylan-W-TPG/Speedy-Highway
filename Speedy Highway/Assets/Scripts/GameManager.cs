@@ -2,24 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-
-    [SerializeField] private float obstacleSpawnIntervalTime = 1f;
-    public float ObstacleSpawnIntervalTime
-    {
-        get
-        {
-            return obstacleSpawnIntervalTime;
-        }
-    }
-    private float initSpawnIntervalTime;
-    [SerializeField] private float obstacleSpawnTimeReductionRate = 1f;
-
-    private PlayerCar car;
-    private float initSpeed;
 
     private float distance;
     public float Distance
@@ -27,6 +14,10 @@ public class GameManager : MonoBehaviour
         get
         {
             return distance;
+        }
+        set
+        {
+            distance = value;
         }
     }
 
@@ -70,8 +61,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        initSpawnIntervalTime = obstacleSpawnIntervalTime;
-        
         Initiate();
         
         if (limitFPS)
@@ -83,19 +72,7 @@ public class GameManager : MonoBehaviour
 
     private void Initiate()
     {
-        car = GameObject.Find("PlayerCar").GetComponent<PlayerCar>();
-        initSpeed = car.MainSpeed;
-        obstacleSpawnIntervalTime = initSpawnIntervalTime;
         hasCrashed = false;
-    }
-
-    void Update()
-    {
-        if (car != null && !hasCrashed)
-        {
-            distance = Mathf.Round(car.transform.position.z);
-            obstacleSpawnIntervalTime = initSpawnIntervalTime * (initSpeed / car.MainSpeed) / obstacleSpawnTimeReductionRate;
-        }
     }
 
     public void CarCrash()
@@ -107,6 +84,12 @@ public class GameManager : MonoBehaviour
     IEnumerator GameOver()
     {
         yield return new WaitForSecondsRealtime(crashUIDelayTime);
-        Debug.Log("Game Over.");
+        UIManager.instance.GameOver();
+    }
+
+    public void SceneLoad(String name)
+    {
+        Initiate();
+        SceneManager.LoadScene(name);
     }
 }

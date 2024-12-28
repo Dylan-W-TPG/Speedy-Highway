@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class ObstacleSpawner : MonoBehaviour
 {
+    [SerializeField] private float obstacleSpawnIntervalTime = 1f;
+    private float initSpawnIntervalTime;
+    [SerializeField] private float obstacleSpawnTimeReductionRate = 1f;
+    
     [SerializeField] private GameObject[] obstacles;
 
     private PlayerCar car;
@@ -16,7 +20,8 @@ public class ObstacleSpawner : MonoBehaviour
     void Start()
     {
         car = GameObject.Find("PlayerCar").GetComponent<PlayerCar>();
-        delayTimer = GameManager.instance.ObstacleSpawnIntervalTime;
+        delayTimer = obstacleSpawnIntervalTime;
+        initSpawnIntervalTime = obstacleSpawnIntervalTime;
     }
 
     // Update is called once per frame
@@ -26,6 +31,8 @@ public class ObstacleSpawner : MonoBehaviour
         {
             if (delayTimer <= 0f) SpawnObstacle();
             else delayTimer -= Time.deltaTime;
+
+            obstacleSpawnIntervalTime = initSpawnIntervalTime * (car.InitSpeed / car.MainSpeed) / obstacleSpawnTimeReductionRate;
         }
     }
 
@@ -38,6 +45,6 @@ public class ObstacleSpawner : MonoBehaviour
 
         GameObject newObstacle = Instantiate(obstacles[Random.Range(0, obstacles.Length)], randomPos, Quaternion.identity);
 
-        delayTimer = GameManager.instance.ObstacleSpawnIntervalTime;
+        delayTimer = obstacleSpawnIntervalTime;
     }
 }

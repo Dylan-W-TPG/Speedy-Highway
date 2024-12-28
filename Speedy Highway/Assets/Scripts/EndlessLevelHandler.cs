@@ -34,7 +34,7 @@ public class EndlessLevelHandler : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.instance.HasCrashed)
+        if (!GameManager.instance.HasCrashed && car != null)
         {
             carZPos = car.transform.position.z;
             if (carZPos >= sectionNo * sectionLength)

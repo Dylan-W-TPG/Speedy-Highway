@@ -13,6 +13,14 @@ public class PlayerCar : MonoBehaviour
             return mainSpeed;
         }
     }
+    private float initSpeed;
+    public float InitSpeed
+    {
+        get
+        {
+            return initSpeed;
+        }
+    }
     [SerializeField] private float acceleration = 0.1f;
     [SerializeField] private int roadLanes = 5;
     public int RoadLanes
@@ -74,6 +82,7 @@ public class PlayerCar : MonoBehaviour
         laneNo = roadLanes / 2;
         laneWidth = GameObject.Find("Road").transform.lossyScale.x / (float) roadLanes;
         rB = GetComponent<Rigidbody>();
+        initSpeed = mainSpeed;
     }
 
     // Update is called once per frame
@@ -83,6 +92,8 @@ public class PlayerCar : MonoBehaviour
         xPos = (laneNo - 2) * laneWidth;
         transform.position = new Vector3(xPos, transform.position.y, transform.position.z);
         mainSpeed += acceleration * Time.deltaTime;
+
+        GameManager.instance.Distance = Mathf.Round(transform.position.z);
     }
 
     void SteeringLeft(InputAction.CallbackContext context)
