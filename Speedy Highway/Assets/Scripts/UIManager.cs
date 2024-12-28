@@ -10,13 +10,13 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    private TextMeshProUGUI scoreText;
+    private GameObject scoreText;
 
     private TextMeshProUGUI debugFPSText;
     private int avgFPS;
     private WaitForSecondsRealtime countDelay = new WaitForSecondsRealtime(0.25f);
 
-    private RectTransform gameOverScreen;
+    private GameObject gameOverScreen;
 
     // Awake is called when the script instance is being loaded
     void Awake()
@@ -34,15 +34,15 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        scoreText = GameObject.Find("Canvas/Distance").GetComponent<TextMeshProUGUI>();
+        scoreText = GameObject.Find("Canvas/Distance");
         debugFPSText = GameObject.Find("Canvas/DebugFPS").GetComponent<TextMeshProUGUI>();
-        gameOverScreen = GameObject.Find("Canvas/GameOver").GetComponent<RectTransform>();
-        gameOverScreen.gameObject.SetActive(false);
+        gameOverScreen = GameObject.Find("Canvas/GameOver");
+        if (gameOverScreen != null) gameOverScreen.SetActive(false);
     }
 
     void Update()
     {
-        scoreText.text = "Distance: " + GameManager.instance.Distance + " m";
+        if (scoreText != null) scoreText.GetComponent<TextMeshProUGUI>().text = "Distance: " + GameManager.instance.Distance + " m";
         if (debugFPSText != null) StartCoroutine(FPSCounter());
     }
 
@@ -61,8 +61,8 @@ public class UIManager : MonoBehaviour
 
     public void GameOver()
     {
-        gameOverScreen.Find("Panel/DistanceValue").GetComponent<TextMeshProUGUI>().text = GameManager.instance.Distance + " m";
-        gameOverScreen.gameObject.SetActive(true);
+        gameOverScreen.transform.Find("Panel/DistanceValue").GetComponent<TextMeshProUGUI>().text = GameManager.instance.Distance + " m";
+        if (gameOverScreen != null) gameOverScreen.SetActive(true);
     }
 
     public void SceneRestart()
@@ -73,5 +73,10 @@ public class UIManager : MonoBehaviour
     public void SceneLoad(String name)
     {
         GameManager.instance.SceneLoad(name);
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }
