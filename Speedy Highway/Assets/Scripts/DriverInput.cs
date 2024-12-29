@@ -44,6 +44,24 @@ public partial class @DriverInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SteerTouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""de39a444-c716-48eb-8794-92fe24f977cc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Tap"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TouchPosition"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""2ea58cf7-5551-4245-89de-14a0d89663bc"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -90,6 +108,28 @@ public partial class @DriverInput: IInputActionCollection2, IDisposable
                     ""action"": ""SteerRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ffc20a0d-ea94-4f04-817c-7e838d4cd689"",
+                    ""path"": ""<Touchscreen>/primaryTouch/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SteerTouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8c90fde7-95a8-4126-99ac-d453536f6e66"",
+                    ""path"": ""<Touchscreen>/primaryTouch/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TouchPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -100,6 +140,8 @@ public partial class @DriverInput: IInputActionCollection2, IDisposable
         m_Driving = asset.FindActionMap("Driving", throwIfNotFound: true);
         m_Driving_SteerLeft = m_Driving.FindAction("SteerLeft", throwIfNotFound: true);
         m_Driving_SteerRight = m_Driving.FindAction("SteerRight", throwIfNotFound: true);
+        m_Driving_SteerTouch = m_Driving.FindAction("SteerTouch", throwIfNotFound: true);
+        m_Driving_TouchPosition = m_Driving.FindAction("TouchPosition", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -163,12 +205,16 @@ public partial class @DriverInput: IInputActionCollection2, IDisposable
     private List<IDrivingActions> m_DrivingActionsCallbackInterfaces = new List<IDrivingActions>();
     private readonly InputAction m_Driving_SteerLeft;
     private readonly InputAction m_Driving_SteerRight;
+    private readonly InputAction m_Driving_SteerTouch;
+    private readonly InputAction m_Driving_TouchPosition;
     public struct DrivingActions
     {
         private @DriverInput m_Wrapper;
         public DrivingActions(@DriverInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @SteerLeft => m_Wrapper.m_Driving_SteerLeft;
         public InputAction @SteerRight => m_Wrapper.m_Driving_SteerRight;
+        public InputAction @SteerTouch => m_Wrapper.m_Driving_SteerTouch;
+        public InputAction @TouchPosition => m_Wrapper.m_Driving_TouchPosition;
         public InputActionMap Get() { return m_Wrapper.m_Driving; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -184,6 +230,12 @@ public partial class @DriverInput: IInputActionCollection2, IDisposable
             @SteerRight.started += instance.OnSteerRight;
             @SteerRight.performed += instance.OnSteerRight;
             @SteerRight.canceled += instance.OnSteerRight;
+            @SteerTouch.started += instance.OnSteerTouch;
+            @SteerTouch.performed += instance.OnSteerTouch;
+            @SteerTouch.canceled += instance.OnSteerTouch;
+            @TouchPosition.started += instance.OnTouchPosition;
+            @TouchPosition.performed += instance.OnTouchPosition;
+            @TouchPosition.canceled += instance.OnTouchPosition;
         }
 
         private void UnregisterCallbacks(IDrivingActions instance)
@@ -194,6 +246,12 @@ public partial class @DriverInput: IInputActionCollection2, IDisposable
             @SteerRight.started -= instance.OnSteerRight;
             @SteerRight.performed -= instance.OnSteerRight;
             @SteerRight.canceled -= instance.OnSteerRight;
+            @SteerTouch.started -= instance.OnSteerTouch;
+            @SteerTouch.performed -= instance.OnSteerTouch;
+            @SteerTouch.canceled -= instance.OnSteerTouch;
+            @TouchPosition.started -= instance.OnTouchPosition;
+            @TouchPosition.performed -= instance.OnTouchPosition;
+            @TouchPosition.canceled -= instance.OnTouchPosition;
         }
 
         public void RemoveCallbacks(IDrivingActions instance)
@@ -215,5 +273,7 @@ public partial class @DriverInput: IInputActionCollection2, IDisposable
     {
         void OnSteerLeft(InputAction.CallbackContext context);
         void OnSteerRight(InputAction.CallbackContext context);
+        void OnSteerTouch(InputAction.CallbackContext context);
+        void OnTouchPosition(InputAction.CallbackContext context);
     }
 }
