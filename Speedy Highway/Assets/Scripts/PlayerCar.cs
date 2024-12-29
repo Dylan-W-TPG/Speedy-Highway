@@ -42,6 +42,8 @@ public class PlayerCar : MonoBehaviour
     private DriverInput actions;
     private InputAction steerLeft;
     private InputAction steerRight;
+    private InputAction steerTouch;
+    private InputAction touchPosition;
 
     public int laneNo;
     
@@ -62,18 +64,25 @@ public class PlayerCar : MonoBehaviour
         steerLeft.started += SteeringLeft;
         steerRight = actions.Driving.SteerRight;
         steerRight.started += SteeringRight;
+        steerTouch = actions.Driving.SteerTouch;
+        steerTouch.started += StartTouch;
+        touchPosition = actions.Driving.TouchPosition;
     }
 
     void OnEnable()
     {
         steerLeft.Enable();
         steerRight.Enable();
+        steerTouch.Enable();
+        touchPosition.Enable();
     }
 
     void OnDisable()
     {
         steerLeft.Disable();
         steerRight.Disable();
+        steerTouch.Disable();
+        touchPosition.Disable();
     }
     
     // Start is called before the first frame update
@@ -104,6 +113,12 @@ public class PlayerCar : MonoBehaviour
     void SteeringRight(InputAction.CallbackContext context)
     {
         if (laneNo < roadLanes - 1) laneNo++;
+    }
+
+    void StartTouch(InputAction.CallbackContext context)
+    {
+        if (touchPosition.ReadValue<Vector2>().x <= (float) Screen.width / 2f) SteeringLeft(context);
+        else SteeringRight(context);
     }
 
     void OnCollisionEnter(Collision col)
