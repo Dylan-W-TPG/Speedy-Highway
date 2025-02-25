@@ -68,6 +68,13 @@ public class GameManager : MonoBehaviour
             QualitySettings.vSyncCount = 0; // Set vSyncCount to 0 so that using .targetFrameRate is enabled.
             Application.targetFrameRate = FPS;
         }
+
+        // If this game is built on Android, set the intended FPS
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = (int) Screen.currentResolution.refreshRateRatio.value;
+        }
     }
 
     private void Initiate()
