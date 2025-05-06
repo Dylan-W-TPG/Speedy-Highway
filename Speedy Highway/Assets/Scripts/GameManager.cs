@@ -6,8 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    // Singleton Instance
     public static GameManager instance;
 
+    // Distance Travelled
     private float distance;
     public float Distance
     {
@@ -21,7 +23,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Delay Time after crashing before showing UI
     [SerializeField] private float crashUIDelayTime = 3f;
+
+    // If Car has Crashed
     private bool hasCrashed;
     public bool HasCrashed
     {
@@ -33,9 +38,9 @@ public class GameManager : MonoBehaviour
 
     // DEBUG MODE
     [Header("Debug Mode")]
-    [SerializeField] private bool limitFPS;
-    [SerializeField] private int FPS = 30;
-    [SerializeField] private bool showFPSCounter;
+    [SerializeField] private bool limitFPS; // Cap the maximum FPS
+    [SerializeField] private int FPS = 30; // Set Game FPS
+    [SerializeField] private bool showFPSCounter; // Show FPS Counter at the corner of the screen
     public bool ShowFPSCounter
     {
         get
@@ -61,15 +66,17 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        // Begin Game Initiation
         Initiate();
         
+        // Limit FPS instead of depending on vSyncing
         if (limitFPS)
         {
             QualitySettings.vSyncCount = 0; // Set vSyncCount to 0 so that using .targetFrameRate is enabled.
             Application.targetFrameRate = FPS;
         }
 
-        // If this game is built on Android, set the intended FPS
+        // If this game is built on Android, set the intended refresh rate as FPS
         if (Application.platform == RuntimePlatform.Android)
         {
             QualitySettings.vSyncCount = 0;
@@ -77,23 +84,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Reset game state to normal
     private void Initiate()
     {
         hasCrashed = false;
     }
 
+    // Request a Game Over when car has crashed
     public void CarCrash()
     {
         hasCrashed = true;
         StartCoroutine(GameOver());
     }
 
+    // Delay with a set number of seconds before showing GameOver UI
     IEnumerator GameOver()
     {
         yield return new WaitForSecondsRealtime(crashUIDelayTime);
         UIManager.instance.GameOver();
     }
 
+    // Load scene based on name in string
     public void SceneLoad(String name)
     {
         Initiate();
